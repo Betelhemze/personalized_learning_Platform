@@ -8,14 +8,17 @@ const {
   deleteUser,
 } = require("../controllers/adminController.js");
 
-router.get("/", getallUser);
+const validateToken = require("../middleware/validateToken");
+const requireRole = require("../middleware/roleMiddleware");
+
+router.get("/", validateToken, requireRole("admin"), getallUser);
 
 router.post("/", newAdmin);
 
-router.get("/:id", getauser);
+router.get("/:id",validateToken, requireRole("admin") ,getauser);
 
-router.put("/:id", updateProfile);
+router.put("/:id",validateToken, requireRole("admin"), updateProfile);
 
-router.delete("/:id", deleteUser);
+router.delete("/:id",validateToken, requireRole("admin"),deleteUser);
 
 module.exports = router;

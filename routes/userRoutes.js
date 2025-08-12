@@ -19,9 +19,9 @@ router.post("/login", login);
 
 router.get("/current",validateToken, profile);
 
-router.put("/update", Updateprofile);
+router.put("/update", validateToken, Updateprofile);
 
-router.post("/logout",logout);
+router.post("/logout",validateToken,logout);
 
 router.get("/view",view);
 

@@ -7,7 +7,7 @@ const validateToken = asyncHandler(async (req, res, next) => {
   //whenever a user is sending a request, token passed in the header section
   let token;
   let authHeader = req.headers.Authorization || req.headers.authorization;
-  if (authHeader && authHeader.startsWith("Bearer")) {
+  if (authHeader && authHeader.startsWith("Bearer ")) {
     //extract the token
     token = authHeader.split(" ")[1];
     jwt.verify(token, process.env.ACCESS_TOKEN, (err, decoded) => {
@@ -20,7 +20,7 @@ const validateToken = asyncHandler(async (req, res, next) => {
     });
 
     if(!token){
-        req.status(401);
+        res.status(401);
         throw new Error("user is not authorized or token missing in the request!")
     }
   }

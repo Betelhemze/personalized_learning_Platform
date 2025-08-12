@@ -5,9 +5,9 @@ const jwt = require("jsonwebtoken");
 //const { updateProfile } = require("./adminController");
 
 const signup = asyncHandler(async (req, res) => {
-  const { username, email, password } = req.body;
+  const { Fullname, email, password } = req.body;
 
-  if (!username || !email || !password) {
+  if (!Fullname || !email || !password ) {
     res.status(400);
     throw new Error("all field are required!");
   }
@@ -20,9 +20,10 @@ const signup = asyncHandler(async (req, res) => {
 
   const hashedPassword = await bcrypt.hash(password, 10);
   const newUser = await User.create({
-    username,
+    Fullname,
     email,
     password: hashedPassword,
+  
   });
   //to show only the email and id
   if (newUser) {
@@ -50,7 +51,7 @@ const login = asyncHandler(async (req, res) => {
       {
         //payload: pass the information we want in our token
         user: {
-          username: user.username,
+          Fullname: user.Fullname,
           email: user.email,
           id: user.id,
         },
@@ -58,7 +59,7 @@ const login = asyncHandler(async (req, res) => {
       /// access token secret
       //using access token we can access private route
       process.env.ACCESS_TOKEN,
-      {expiresIn: "1hr"}
+      {expiresIn: "1h"}
     );
     res.status(200).json({ accessToken });
   }else{
@@ -75,6 +76,9 @@ const profile = asyncHandler(async (req, res) => {
 });
 
 const Updateprofile = asyncHandler(async (req, res) => {
+  if(req.user.id !== req.params.id && req.user.role !== "admin"){
+    return res.status(403).json({message: "you can't update other user profile!"})
+  }
   res.json({ message: "update user profile!" });
 });
 
